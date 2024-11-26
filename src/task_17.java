@@ -3,35 +3,26 @@ import java.util.Random;
 import java.util.Scanner;
 
 
-//17. Почитать количество столбцов заданной матрицы, которые составлены из попарно различных чисел.
+//Первоначальное задание 17. Почитать количество столбцов заданной матрицы, которые составлены из попарно различных чисел.
+
+//Изменённое задание:  программа  считывает матрицу целых чисел и выводит номера столбцов, в которых сумма элементов больше заданного значения.
+//Также для этих столбцов нужно выводить среднее значение элементов.
 public class task_17 {
-    private int row;
-    private int column;
-    private Vector<Vector<Integer>> matrix;
 
-
-    public void initializeMatrix() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Введите количество строк:");
-        row = scanner.nextInt();
-        System.out.println("Введите количество столбцов:");
-        column = scanner.nextInt();
+  // Заполнение матрицы случайными значениями
+    public static void matrixCreate(Integer[][] matrix) {
         Random random = new Random();
-        matrix = new Vector<>(); // Создаем пустую матрицу
-        // Заполнение матрицы случайными числами
-        for (int i = 0; i < row; i++) {
-            Vector<Integer> row = new Vector<>(); // Создаем новую строку
-            for (int j = 0; j < column; j++) {
-                row.add(random.nextInt(20)); // Генерация случайного числа
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                matrix[i][j] = random.nextInt(100) - 50; // Генерация чисел от -50 до 49
             }
-            matrix.add(row); // Добавляем заполненную строку в матрицу
         }
     }
 
-
-    // Метод для печати матрицы на экран
-    public void printMatrix() {
-        for (Vector<Integer> row : matrix) {
+    // Вывод матрицы на экран
+    public static void matrixPrint(Integer[][] matr) {
+        System.out.println("Матрица:");
+        for (Integer[] row : matr) {
             for (Integer value : row) {
                 System.out.print(value + " ");
             }
@@ -39,76 +30,49 @@ public class task_17 {
         }
     }
 
-
-
-    // Метод для подсчета количества уникальных столбцов
-    public int countDistinctColumns() {
-        int uniqueColumn_Count = 0; // Счетчик столбцов с попарно различными элементами
-        // Проверка каждого столбца на уникальность значений
-        for (int c = 0; c < column; c++) {
-            Vector<Integer> Unique_Values = new Vector<>(); // Вектор для хранения различных элементов
-            int uniqueValue_Count = 0; // Счетчик различных элементов  в текущем столбце
-            for (int r = 0; r < row; r++) {
-                int current_Value = matrix.get(row).get(c); // Получаем текущее значение из матрицы
-                // Проверка, встречалось ли значение ранее
-                if (!Unique_Values.contains(current_Value)) {
-                    Unique_Values.add(current_Value); // Добавляем новое значение
-                    uniqueValue_Count++;
-                }
-            }
-            // Если количество уникальных значений равно количеству строк, увеличиваем счетчик уникальных столбцов
-            if (uniqueValue_Count == row) {
-                uniqueColumn_Count++;
-            }
-        }
-        return uniqueColumn_Count;
-    }
-
-
-    // Метод для вывода номеров столбцов с попарно различными числами
-    public void printDistinctColumnIndices() {
-        Vector<Integer> distinctColumnIndices = new Vector<>(); // Вектор для хранения индексов уникальных столбцов
-        // Проверка каждого столбца на уникальность значений
-        for (int c = 0; c < column; c++) {
-            Vector<Integer> seenValues = new Vector<>(); // Вектор для хранения уникальных значений в текущем столбце
-            int uniqueValueCount = 0;
-            for (int r = 0; r < row; r++) {
-                int currentValue = matrix.get(r).get(c);
-                // Проверка, встречалось ли значение ранее
-                if (!seenValues.contains(currentValue)) {
-                    seenValues.add(currentValue); // Добавляем новое значение
-                    uniqueValueCount++;
-                }
-            }
-            // Если количество уникальных значений равно количеству строк, добавляем номер столбца в вектор
-            if (uniqueValueCount == row) {
-                distinctColumnIndices.add(c + 1); // Добавляем номер столбца (с учетом того, что отсчёт начинается с 1)
-            }
-        }
-        printDistinctColumns(distinctColumnIndices);
-    }
-
-
-
-    // Метод для печати номеров столбцов с попарно различными числами
-    private void printDistinctColumns(Vector<Integer> distinctColumns) {
-        System.out.print("Номера столбцов с попарно различными числами: ");
-        for (int i = 0; i < distinctColumns.size(); i++) {
-            System.out.print(distinctColumns.get(i) + (i < distinctColumns.size() - 1 ? ", " : ""));
-        }
-        System.out.println();
-    }
-
-
-
-
     public static void main(String[] args) {
-        task_17 main = new task_17 ();
-        main.initializeMatrix();
-        System.out.println("Матрица:");
-        main.printMatrix();
-        int distinctCount = main.countDistinctColumns();
-        System.out.println("Общее количество столбцов с попарно различными числами: " + distinctCount);
-        main.printDistinctColumnIndices();
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Введите количество строк в матрице: ");
+        int n = sc.nextInt();
+        if (n <= 0) {
+            System.out.println("Ошибка ввода, количество строк должно быть натуральным");
+            return;
+        }
+
+        System.out.println("Введите количество столбцов в матрице: ");
+        int m = sc.nextInt();
+        if (m <= 0) {
+            System.out.println("Ошибка ввода, количество столбцов должно быть натуральным");
+            return;
+        }
+
+        System.out.println("Введите значение для сравнения суммы столбцов: ");
+        int threshold = sc.nextInt();
+
+        Integer[][] matr = new Integer[n][m];
+        matrixCreate(matr);
+        matrixPrint(matr);
+
+        // Вывод номеров столбцов, сумма которых больше заданного значения
+        System.out.println("Номера столбцов с суммой элементов больше " + threshold + ":");
+        boolean foundColumns = false;
+
+        for (int j = 0; j < m; j++) {
+            int sum = 0;
+            for (int i = 0; i < n; i++) {
+                sum += matr[i][j]; // Суммируем элементы столбца
+            }
+            if (sum > threshold) {
+                foundColumns = true;
+                double average = (double) sum / n; // Среднее значение
+                System.out.println("Столбец " + (j + 1) + ": сумма = " + sum + ", среднее = " + average);
+            }
+        }
+
+        if (!foundColumns) {
+            System.out.println("Нет столбцов с суммой элементов больше " + threshold);
+        }
+
+        sc.close(); // Закрываем сканер
     }
 }
